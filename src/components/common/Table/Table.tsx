@@ -15,6 +15,8 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import { CircularProgress } from "@mui/material";
+import styled from "@emotion/styled";
+
 import { IRecord } from "../../../types/records.ts";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -64,6 +66,7 @@ interface HeadCell {
   id: keyof IRecord;
   label: string;
   numeric: boolean;
+  minWidth?: number;
 }
 
 const headCells: readonly HeadCell[] = [
@@ -126,6 +129,7 @@ const headCells: readonly HeadCell[] = [
     id: "out_of_service_date",
     numeric: true,
     label: "Out of service date",
+    minWidth: 150,
   },
 ];
 
@@ -156,6 +160,11 @@ function EnhancedTableHead({
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}
+            style={{
+              minWidth: headCell.minWidth ?? "auto",
+              background: "#556cd6",
+              color: "white",
+            }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -175,6 +184,24 @@ function EnhancedTableHead({
     </TableHead>
   );
 }
+
+const StyledTableRow = styled(TableRow)(() => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: "#556cd600",
+    "&:hover": {
+      backgroundColor: "#556cd640",
+    },
+  },
+  "&:nth-of-type(even)": {
+    backgroundColor: "#556cd620",
+    "&:hover": {
+      backgroundColor: "#556cd640",
+    },
+    "& td, & th": {
+      border: 0,
+    },
+  },
+}));
 
 export default function EnhancedTable() {
   let navigate = useNavigate();
@@ -256,8 +283,9 @@ export default function EnhancedTable() {
         </Box>
       ) : (
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <TableContainer>
+          <TableContainer sx={{ maxHeight: "calc(100vh - 192px)" }}>
             <Table
+              stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
               size="medium"
@@ -270,7 +298,7 @@ export default function EnhancedTable() {
               <TableBody>
                 {visibleRows.map((row) => {
                   return (
-                    <TableRow
+                    <StyledTableRow
                       hover
                       tabIndex={-1}
                       key={row.id}
@@ -282,17 +310,17 @@ export default function EnhancedTable() {
                           {row[headCell.id]}
                         </TableCell>
                       ))}
-                    </TableRow>
+                    </StyledTableRow>
                   );
                 })}
                 {emptyRows > 0 && (
-                  <TableRow
+                  <StyledTableRow
                     style={{
                       height: 53 * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />
-                  </TableRow>
+                  </StyledTableRow>
                 )}
               </TableBody>
             </Table>

@@ -13,7 +13,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     <>
       <Header />
       <main>
-        <Box sx={{ padding: "50px 20px", maxWidth: "1920px" }}>{children}</Box>
+        <Box sx={{ padding: "100px 20px 20px 20px", maxWidth: "1920px" }}>{children}</Box>
       </main>
     </>
   );

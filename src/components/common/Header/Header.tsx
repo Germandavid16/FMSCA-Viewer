@@ -6,7 +6,7 @@ export const Header = () => {
   return (
     <AppBar
       sx={{ padding: "20px" }}
-      position="static"
+      position="fixed"
       color="primary"
       enableColorOnDark
     >

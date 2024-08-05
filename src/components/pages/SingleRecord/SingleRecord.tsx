@@ -166,7 +166,7 @@ export const SingleRecord = () => {
                   <strong>Physical Address:</strong> {record.physical_address}
                 </DataField>
                 <DataField>
-                  <strong>Phone:</strong> {record.phone}
+                  <strong>Phone:</strong> {record.phone ? record.phone : "N/A"}
                 </DataField>
                 <DataField>
                   <strong>Mailing Address:</strong> {record.mailing_address}
