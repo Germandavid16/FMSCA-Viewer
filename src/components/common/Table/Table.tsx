@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Papa from "papaparse";
+import { useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -207,6 +208,8 @@ function EnhancedTableHead({
 }
 
 export default function EnhancedTable() {
+  let navigate = useNavigate();
+
   const [order, setOrder] = React.useState<Order>("desc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("created_dt");
   const [page, setPage] = React.useState(0);
@@ -272,6 +275,10 @@ export default function EnhancedTable() {
     [order, orderBy, page, rowsPerPage, rows],
   );
 
+  const handleRowClick = (id: string) => {
+    navigate(`/${id}`);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -303,6 +310,7 @@ export default function EnhancedTable() {
                         tabIndex={-1}
                         key={row.id}
                         sx={{ cursor: "pointer" }}
+                        onClick={() => handleRowClick(row.id)}
                       >
                         {headCells.map((headCell) => (
                           <TableCell
