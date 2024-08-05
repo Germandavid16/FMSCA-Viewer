@@ -15,38 +15,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import { CircularProgress } from "@mui/material";
-
-interface Data {
-  created_dt: string;
-  credit_score: string;
-  data_source_modified_dt: string;
-  dba_name: string;
-  drivers: string;
-  duns_number: string;
-  entity_type: string;
-  id: string;
-  legal_name: string;
-  m_city: string;
-  m_state: string;
-  m_street: string;
-  m_zip_code: string;
-  mailing_address: string;
-  mc_mx_ff_number: string;
-  mcs_150_form_date: string;
-  mcs_150_mileage_year: string;
-  operating_status: string;
-  out_of_service_date: string;
-  p_city: string;
-  p_state: string;
-  p_street: string;
-  p_zip_code: string;
-  phone: string;
-  physical_address: string;
-  power_units: string;
-  record_status: string;
-  state_carrier_id_number: string;
-  usdot_number: string;
-}
+import { IRecord } from "../../../types/records.ts";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -92,7 +61,7 @@ function stableSort<T>(
 }
 
 interface HeadCell {
-  id: keyof Data;
+  id: keyof IRecord;
   label: string;
   numeric: boolean;
 }
@@ -163,7 +132,7 @@ const headCells: readonly HeadCell[] = [
 interface EnhancedTableProps {
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data,
+    property: keyof IRecord,
   ) => void;
   order: Order;
   orderBy: string;
@@ -175,7 +144,7 @@ function EnhancedTableHead({
   onRequestSort,
 }: EnhancedTableProps) {
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof IRecord) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -211,10 +180,10 @@ export default function EnhancedTable() {
   let navigate = useNavigate();
 
   const [order, setOrder] = React.useState<Order>("desc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("created_dt");
+  const [orderBy, setOrderBy] = React.useState<keyof IRecord>("created_dt");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
-  const [rows, setRows] = useState<Data[]>([]);
+  const [rows, setRows] = useState<IRecord[]>([]);
   const [loading, setLoading] = useState(false);
 
   const getData = async () => {
@@ -244,7 +213,7 @@ export default function EnhancedTable() {
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
-    property: keyof Data,
+    property: keyof IRecord,
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -281,71 +250,64 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        {loading ? (
-          <Box
-            justifyContent="center"
-            sx={{ display: "flex", padding: "40px" }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <>
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="medium"
-              >
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                  {visibleRows.map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        tabIndex={-1}
-                        key={row.id}
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleRowClick(row.id)}
-                      >
-                        {headCells.map((headCell) => (
-                          <TableCell
-                            align={headCell.numeric ? "right" : "left"}
-                          >
-                            {row[headCell.id]}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
+      {loading ? (
+        <Box justifyContent="center" sx={{ display: "flex", padding: "40px" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size="medium"
+            >
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
+              <TableBody>
+                {visibleRows.map((row) => {
+                  return (
                     <TableRow
-                      style={{
-                        height: 53 * emptyRows,
-                      }}
+                      hover
+                      tabIndex={-1}
+                      key={row.id}
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleRowClick(row.id)}
                     >
-                      <TableCell colSpan={6} />
+                      {headCells.map((headCell) => (
+                        <TableCell align={headCell.numeric ? "right" : "left"}>
+                          {row[headCell.id]}
+                        </TableCell>
+                      ))}
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[50, 100, 200, 500, 1000]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </>
-        )}
-      </Paper>
+                  );
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: 53 * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[50, 100, 200, 500, 1000]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      )}
     </Box>
   );
 }
