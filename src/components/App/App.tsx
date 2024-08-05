@@ -1,4 +1,4 @@
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 import EnhancedTable from "../Table/Table";
 import { Header } from "../Header/Header";
@@ -7,9 +7,9 @@ export default function App() {
   return (
     <>
       <Header />
-      <Container sx={{ padding: "50px 0" }} maxWidth="lg">
+      <Box sx={{ padding: "50px 20px", maxWidth: "1920px" }}>
         <EnhancedTable />
-      </Container>
+      </Box>
     </>
   );
 }

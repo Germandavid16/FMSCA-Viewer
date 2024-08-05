@@ -1,6 +1,6 @@
 import { AppBar } from "@mui/material";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 export const Header = () => {
   return (
@@ -10,11 +10,11 @@ export const Header = () => {
       color="primary"
       enableColorOnDark
     >
-      <Container maxWidth="lg">
+      <Box sx={{ maxWidth: "1920px" }}>
         <Typography variant="h6" component="h6">
           FMSCA viewer
         </Typography>
-      </Container>
+      </Box>
     </AppBar>
   );
 };
